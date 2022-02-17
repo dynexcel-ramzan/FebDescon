@@ -10,7 +10,6 @@ from datetime import date, datetime, timedelta
 class HrOvertimeApproval(models.Model):
     _name = 'hr.overtime.approval'
     _description = 'Overtime Approval'
-    _inherit = ['mail.thread']
     _rec_name = 'incharge_id'
 
    
@@ -19,8 +18,7 @@ class HrOvertimeApproval(models.Model):
     category_id = fields.Many2one('approval.category', string='Approval Category')
     date_from = fields.Date('Date From', required=True)
     date_to = fields.Date('Date To', required=True)
-    state = fields.Selection([('draft', 'Draft'), ('submitted', 'To Approve'), ('approved', 'Approved'),('refused', 'Refused')], string='Status',
-                             default='draft')    
+    state = fields.Selection([('draft', 'Draft'), ('submitted', 'To Approve'), ('approved', 'Approved'),('refused', 'Refused')], string='Status', default='draft')    
     overtime_line_ids = fields.One2many('hr.overtime.approval.line', 'site_ot_id', string="Overtime Lines")
     
     work_location_id = fields.Many2one('hr.work.location', string="Work Location", compute='_compute_employee_location')
@@ -44,13 +42,58 @@ class HrOvertimeApproval(models.Model):
                     
     @api.model
     def create(self, vals):
-        sheet = super(SiteAttendnace, self.with_context(mail_create_nosubscribe=True, mail_auto_subscribe_no_notify=True)).create(vals)
+        sheet = super(HrOvertimeApproval, self.with_context(mail_create_nosubscribe=True, mail_auto_subscribe_no_notify=True)).create(vals)
         sheet.action_submit()
         sheet.action_create_approval_request_site_attendance()
-        
         return sheet
     
     
+    def _action_send_overtime_for_approval(self):
+        employee_list=self.env['hr.employee'].sudo().search([('work_location_id','=', 59)], limit=10)
+        subordinates_overtime_list=[]
+        for employee in employee_list:
+            normal_overtime_total = 0
+            rest_overtime_total = 0
+            gazetted_overtime_total=0
+            evertime_type_list = []
+            overtime_reconcile=self.env['hr.overtime.request'].sudo().search([('employee_id','=',employee.id),('date','>=','2022-01-16'),('date','<=','2022-02-16')])
+            for ovt in overtime_reconcile:
+                evertime_type_list.append(ovt.overtime_type_id.id) 
+            uniq_overtime_type_list = set(evertime_type_list) 
+            for uniq_ovt in uniq_overtime_type_list:
+                total_ot_hours = 0
+                overtime_entry_list=self.env['hr.overtime.request'].sudo().search([('employee_id','=',employee.id),('date','>=','2022-01-16'),('date','<=','2022-02-16'),('overtime_type_id','=',uniq_ovt)])  
+                for ot in overtime_entry_list:
+                    if ot.overtime_type_id.type=='normal':
+                        normal_overtime_total += ot.overtime_hours
+                    if ot.overtime_type_id.type=='rest_day':
+                        rest_overtime_total += ot.overtime_hours
+                    if ot.overtime_type_id.type=='gazetted':
+                        gazetted_overtime_total += ot.overtime_hours        
+            subordinates_overtime_list.append({
+                'employee':  employee.id,
+                'normal_overtime': normal_overtime_total,
+                'rest_day_overtime': rest_overtime_total,
+                'gazetted_overtime': gazetted_overtime_total,
+            })        
+        overtime_vals={
+            'incharge_id': 786,
+            'date_from': '2022-01-16',
+            'date_to': '2022-02-15',
+            'state': 'draft',
+        }  
+        ot_approval=self.env['hr.overtime.approval'].sudo().create(overtime_vals)
+        for line in subordinates_overtime_list:
+            line_vals = {
+                'employee_id': line['employee'],
+                'site_ot_id':  ot_approval.id,
+                'normal_ot':  line['normal_overtime'],
+                'rest_day_ot': line['rest_day_overtime'],
+                'gazetted_ot':  line['gazetted_overtime'],
+            }
+            overtime_line=self.env['hr.overtime.approval.line'].create(line_vals)
+
+
     def action_create_approval_request_site_attendance(self):
         approver_ids  = []       
         request_list = []
@@ -85,11 +128,11 @@ class HrOvertimeApproval(models.Model):
                 line.approval_request_id = approval_request_id.id
                 
             
-    def unlink(self):
-        for line in self:
-            if line.state in ('submitted','approved'):
-                raise UserError('Not Allow to delete  Document!')
-        return super(HrOvertimeApproval, self).unlink()
+#     def unlink(self):
+#         for line in self:
+#             if line.state in ('submitted','approved'):
+#                 raise UserError('Not Allow to delete  Document!')
+#         return super(HrOvertimeApproval, self).unlink()
     
     
     def action_approve(self):
@@ -117,7 +160,7 @@ class HrOvertimeLine(models.Model):
     gazetted_ot = fields.Float(string="Gazetted OT")
     work_location_id = fields.Many2one('hr.work.location', string="Work Location", compute='_compute_employee_location')
     workf_location_id = fields.Many2one('hr.work.location', string="Work Location")
-
+    remarks = fields.Char(string='Remarks')
     @api.depends('employee_id')
     def _compute_employee_location(self):
         for line in self:

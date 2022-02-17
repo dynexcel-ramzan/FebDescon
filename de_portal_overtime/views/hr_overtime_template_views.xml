@@ -52,10 +52,10 @@
                             <t t-foreach="overtimes" t-as="overtime"> 
                                 <tr>
                                     <td>
-                                        <a t-attf-href="/overtime/request/#{overtime.id}?{{ keep_query() }}"><span t-field="overtime.incharge_id.emp_number"/></a>
+                                        <a t-attf-href="/overtime/approval/#{overtime.id}?{{ keep_query() }}"><span t-field="overtime.incharge_id.emp_number"/></a>
                                     </td>
                                      <td>
-                                        <a t-attf-href="/overtime/request/#{overtime.id}?{{ keep_query() }}"><span t-field="overtime.incharge_id.name"/></a>
+                                        <a t-attf-href="/overtime/approval/#{overtime.id}?{{ keep_query() }}"><span t-field="overtime.incharge_id.name"/></a>
                                     </td>
                                      <td class="text-left">
                                         <span t-esc="overtime.date_from"  t-options='{"widget": "date"}'/>
@@ -71,8 +71,6 @@
                                                 <i class="badge badge-pill badge-info" >Approved</i>
                                             </t>
                                     </td>	
-                                   
-                                 
                                 </tr>
                             </t>
                         </tbody>
@@ -89,12 +87,12 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Overtime</t>
             </t>
-            <t t-if="not emps">
+            <t t-if="not overtime">
                 <div class="alert alert-warning mt8" role="alert">
                     There are no Overtime.
                 </div>
             </t>
-            <t t-if="emps">
+            <t t-if="overtime">
                 <table class="table table-sm table-striped table-bordered"   id="datepanel">        
                     <tr>
                         <th class="text-left">Date From</th>
@@ -109,23 +107,29 @@
                                 <th class="text-left">Normal OT(Hours)</th>
                                 <th class="text-left">Rest OT(Hours)</th>
                                 <th class="text-left">Gazetted OT(Hours)</th>
-                                <th class="text-left">Action</th>
+                                <th class="text-left">Remarks</th>
                             </tr>
-                            <t t-foreach="emps" t-as="emp">   
+                            <t t-foreach="overtime.overtime_line_ids" t-as="ovt_line">   
                                 <tr>  
                                      <td class="employee"> 
-                                       <input type="hidden" class="form-control s_website_form_input" name="employee_id" id="employee_id"   t-att-value="emp.id"/>
-                                         <span t-esc="emp.name" />-(<span t-esc="emp.emp_number" />)
+                                       <input type="hidden" class="form-control s_website_form_input" name="employee_id" id="employee_id"   t-att-value="ovt_line.id"/>
+                                         <span t-esc="ovt_line.employee_id.name" />-(<span t-esc="ovt_line.employee_id.emp_number" />)
                                     </td>
                                      <td class="normalot">
-                                        <input type="float" class="form-control s_website_form_input" name="normal_ot" id="normalot"   t-att-value="normal_ot"/>
+                                        <input type="float" class="form-control s_website_form_input" name="normal_ot" id="normalot"   t-att-value="ovt_line.normal_ot"/>
                                     </td>
                                     <td class="restot">
-                                        <input type="float" class="form-control s_website_form_input" name="rest_day_ot" id="restot"  t-att-value="rest_day_ot"/>
+                                        <input type="float" class="form-control s_website_form_input" name="rest_day_ot" id="restot"  t-att-value="ovt_line.rest_day_ot"/>
                                     </td>
                                     <td class="gazettedot">
-                                        <input type="float" class="form-control s_website_form_input" name="gazetted_ot" id="gazettedot"  t-att-value="gazetted_ot" />
-                                    </td>   
+                                        <input type="float" class="form-control s_website_form_input" name="gazetted_ot" id="gazettedot"  t-att-value="ovt_line.gazetted_ot" />
+                                    </td> 
+                                    <td class="remarks">
+                                        <input type="text" class="form-control s_website_form_input" name="remakrs" id="remarks"   />
+                                    </td> 
+                                    <td class="id">
+                                        <input type="hidden" class="form-control s_website_form_input" name="id" id="id"  t-att-value="ovt_line.id" />
+                                    </td> 
                                 </tr>
                             </t>  
                   </table>
@@ -133,7 +137,6 @@
                   <form id="portal_overtime_approval_form_line" data-toggle="validator" action="/overtime/approval/line/save">
                     <input type="hidden" id="line_overtime_vals" class="form-control s_website_form_input" name="line_overtime_vals"  multiple="true" />  
                        <input type="hidden" id="date_from" class="form-control s_website_form_input" name="date_from" t-att-value="date_from"  multiple="true" /> 
-                        
                         <input type="hidden" id="date_to" class="form-control s_website_form_input" name="date_to" t-att-value="date_to"  multiple="true" /> 
                          
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -149,11 +152,15 @@
                                 var col2_value=currentRow.find(".normalot input").val();
                                 var col3_value=currentRow.find(".restot input").val();
                                 var col4_value=currentRow.find(".gazettedot input").val();
+                                var col5_value=currentRow.find(".remarks input").val();
+                                var col6_value=currentRow.find(".id input").val();
                                 var obj={};
                                 obj.col1=col1_value;
                                 obj.col2=col2_value;
                                 obj.col3=col3_value;
                                 obj.col4=col4_value;
+                                obj.col5=col5_value;
+                                obj.col6=col6_value;
                                 overtimedata.push(obj);
                            });
                          otdictionary = JSON.stringify(overtimedata); 
@@ -163,33 +170,18 @@
                          });
                        });
                           
-                      </script> 
-                       
+                      </script>  
                      <div class="form-group col-12 s_website_form_submit" data-name="Submit Button">
                             <div style="width: 200px;" class="s_website_form_label"></div>
                             <button type="submit" id="overtimeapp" class="btn btn-primary pull-left">Approve</button>
                             <span id="s_website_form_result"></span>
                         </div>
-                
-                
-                </form>
-                
+                </form>  
             </t>   
-            
             <br/>
-            <br/>
-            
-       
-        
-            
+            <br/>   
         </t>
     </template>
-    
-    
-    
-       
-    
-    
     
      <template id="de_portal_overtime.overtime_approve_submited" name="Site Attendance Received">
         <t t-call="portal.portal_layout">
@@ -201,7 +193,7 @@
                         </t>
                         <h1 class="text-center"><i class="fa fa-check-circle fa-2x text-success" role="img" aria-label="Success" title="Success"/></h1>
                         <t t-if="siteattendance">
-                            <h1 class="text-center">Your Site Attendance Request Number is <a t-if="request.session.uid" t-attf-href="#">#<span t-field="siteattendance.id"/></a><t t-if="not request.session.get('uid')">#<span t-field="siteattendance.id"/></t>.</h1>
+                            <h1 class="text-center">Overtime Approval Done <a t-if="request.session.uid" t-attf-href="#">#<span t-field="siteattendance.id"/></a><t t-if="not request.session.get('uid')">#<span t-field="siteattendance.id"/></t>.</h1>
                         </t>
                         <h1 class="text-center">Thank you for Approving your Site Overtime request!</h1>
                     </div>
@@ -209,13 +201,8 @@
             </div>
          </t>
     </template>
-    
 
     
-    
-    
-    
-  
 </odoo>
 
 

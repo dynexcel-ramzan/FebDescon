@@ -27,8 +27,8 @@
 
     # always loaded
     'data': [
-        'security/security.xml',
         'security/ir.model.access.csv',
+        'security/security.xml',
         'views/approval_request_views.xml',
         'views/hr_overtime_approval_views.xml',
         'views/hr_overtime_template_views.xml',
