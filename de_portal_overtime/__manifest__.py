@@ -23,7 +23,7 @@
     'version': '14.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'de_employee_overtime','hr_attendance'],
+    'depends': ['base', 'de_employee_overtime','hr_attendance','approvals'],
 
     # always loaded
     'data': [
@@ -32,6 +32,9 @@
         'views/approval_request_views.xml',
         'views/hr_overtime_approval_views.xml',
         'views/hr_overtime_template_views.xml',
+        'views/hr_work_location_views.xml',
+        'views/hr_overtime_rule_views.xml',
+        'views/hr_overtime_lock_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
