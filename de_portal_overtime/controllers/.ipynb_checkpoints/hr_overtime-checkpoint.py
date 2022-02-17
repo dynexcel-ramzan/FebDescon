@@ -56,22 +56,13 @@ class CustomerPortal(CustomerPortal):
         return values
   
     def _overtime_get_page_view_values(self,overtime, access_token = None, **kwargs):
-        overtime = request.env['hr.overtime.approval'].sudo().search([('incharge_id.user_id','=',http.request.env.context.get('uid'))])
+        
         exist_employee=request.env['hr.employee'].sudo().search([('user_id','=',http.request.env.context.get('uid'))])
-        from_days = exist_employee.company_id.from_date
-        to_days = exist_employee.company_id.to_date
-        total_days = exist_employee.company_id.from_date + exist_employee.company_id.to_date
-        today_date = fields.date.today()
-        month_date_fromcurr = fields.date.today() - timedelta(today_date.day) 
-        replmonth_date_from = month_date_fromcurr - timedelta(1)
-        month_date_from = replmonth_date_from.replace(day=1)
-        date_from = month_date_from - timedelta(1)  + timedelta(exist_employee.company_id.from_date) 
-        to_date = date_from + timedelta(total_days)
         values = {
             'page_name' : 'Overtime',
             'overtime' : overtime,
-            'date_from': date_from,
-            'date_to': to_date,
+            'date_from': overtime.date_from,
+            'date_to': overtime.date_to,
         }
         return self._get_page_view_values(overtime, access_token, values, 'my_overtime_history', False, **kwargs)
 
@@ -152,7 +143,7 @@ class CustomerPortal(CustomerPortal):
         values = []
         id = overtime_id
         try:
-            overtime_sudo = request.env['hr.overtime.approval'].sudo().search([('id','=',overtime_id)])
+            overtime_sudo = request.env['hr.overtime.approval'].sudo().search([('id','=',overtime_id)], limit=1)
         except (AccessError, MissingError):
             return request.redirect('/my')
         values = self._overtime_get_page_view_values(overtime_sudo, access_token, **kw) 

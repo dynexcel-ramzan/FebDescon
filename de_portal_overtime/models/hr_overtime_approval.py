@@ -49,7 +49,7 @@ class HrOvertimeApproval(models.Model):
     
     
     def _action_send_overtime_for_approval(self):
-        employee_list=self.env['hr.employee'].sudo().search([('work_location_id','=', 59)], limit=10)
+        employee_list=self.env['hr.employee'].sudo().search([('work_location_id','=', 59)], limit=5)
         subordinates_overtime_list=[]
         for employee in employee_list:
             normal_overtime_total = 0

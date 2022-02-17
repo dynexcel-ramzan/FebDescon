@@ -99,6 +99,8 @@
                         <td class="text-left"><span t-esc='date_from'  t-options='{"widget": "date"}' /></td>
                         <th class="text-left">Date To</th>
                         <td class="text-left"><span t-esc='date_to' t-options='{"widget": "date"}' /></td>
+                        <th class="text-left">Overtime Limit</th>
+                        <td class="text-left">48</td>
                     </tr>
                 </table>                
                 <table class="table table-sm table-striped table-bordered"   id="overtimeTable">
