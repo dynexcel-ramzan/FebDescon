@@ -60,30 +60,36 @@
                                     <th style="border: 1px solid black; font-size:10px" scope="col" width="150">Amount</th>
                                </tr>
                                 <t t-set="total" t-value="0"/>
+                                 <t t-set="count" t-value="0"/>
                                 <t t-foreach="request.env['account.payment'].search([('date', '>=', o.date_from), ('journal_id', '=', o.journal_id.id)])" t-as="emp">
                                    
                                     <tr>
+                                        <t t-set="count" t-value="count + 1"/>
                                         <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.date"/></td>
-                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="150"><span t-field="emp.partner_id.name"/></td>
-                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.journal_id"/></td>
                                         <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.partner_id"/></td>
+                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.journal_id"/></td>
+                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="150">
+                                            <t t-foreach="emp.partner_id.bank_ids" t-as="ban">
+                                                  <span t-field="ban.acc_number"/>
+                                              </t>
+                                            </td>
                                         <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.amount"/></td>
                                     </tr>
                                     <t t-set="total" t-value="total + emp.amount"/>
                                 </t>
-                                <tr style="color:blue">
+                                <tr>
                                     <td style="border-bottom: 1px solid black; font-size:10px" scope="col" width="100"></td>
                                     <td style="border-bottom: 1px solid black; font-size:10px" scope="col" width="150"></td>
-                                    <td style="border-bottom: 1px solid black; font-size:10px" scope="col" width="100"></td>
-                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="100">Sub Total</td>
+                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="20"> </td>
+                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="100">Sub Total:&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; <span t-esc="count"/></td>
                                     <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-esc="total"/></td>
 
                                 </tr>
-                                <tr style="font-size:10px; color:blue">
+                                <tr style="font-size:10px;">
                                     <td scope="col" width="100"></td>
-                                    <td scope="col" width="150"></td>
                                     <td scope="col" width="100"></td>
-                                    <td scope="col" width="100">Grand Total</td>
+                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="20"> </td>
+                                    <td scope="col" width="100">Grand Total:&#160;&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;  &#160;&#160;&#160;<span t-esc="count"/></td>
                                     <td scope="col" width="100"><span t-esc="total"/></td>
 
                                 </tr>
