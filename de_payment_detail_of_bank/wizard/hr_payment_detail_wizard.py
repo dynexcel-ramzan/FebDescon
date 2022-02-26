@@ -10,8 +10,6 @@ class PaymentDetail(models.TransientModel):
     date_to = fields.Date(string='End Date', required=True)
     journal_id = fields.Many2one('account.journal', string='Pay Document:', required=True)
    
-
-    
     def check_report(self):
         data = {}
         data['form'] = self.read(['date_from','date_to'])[0]

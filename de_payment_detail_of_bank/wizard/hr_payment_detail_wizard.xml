@@ -6,8 +6,7 @@
             <field name="model">payment.detail.wizard</field>
             <field name="arch" type="xml">
                 <form string="Payment Detail Report:">
-                    <group>
-                        
+                    <group>    
                        <group>
                             <field name="date_from"/>
                             <field name="journal_id" widget="many2one_tags"/>
@@ -26,8 +25,6 @@
                 </form>
             </field>
         </record>
-
-        <!--Open the wizard on click of menu-->
         <record id="open_payment_detail_wizard_action" model="ir.actions.act_window">
             <field name="name">Payment Detail Report</field>
             <field name="res_model">payment.detail.wizard</field>

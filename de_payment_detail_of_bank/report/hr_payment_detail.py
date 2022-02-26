@@ -14,9 +14,7 @@ from datetime import datetime
 class PayemntDetailReport(models.AbstractModel):
     _name = 'report.de_payment_detail_of_bank.payment_transfer_report'
     _description = 'Payment Detail Report'
-
-
-    
+ 
     def _get_report_values(self, docids, data=None):
         
         model = self.env.context.get('active_model')
