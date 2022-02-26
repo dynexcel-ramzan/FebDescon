@@ -20,14 +20,15 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','account'],
 
     # always loaded
     'data': [
+        'report/hr_payment_detail_header.xml',
         'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
         'wizard/hr_payment_detail_wizard.xml',
+        'report/hr_payment_detail_view.xml',
+        'report/hr_payment_detail_template.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

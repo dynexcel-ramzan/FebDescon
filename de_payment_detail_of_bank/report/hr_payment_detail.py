@@ -12,7 +12,7 @@ from datetime import datetime
 
 
 class PayemntDetailReport(models.AbstractModel):
-    _name = 'report.de_payment_detail_of_bank.payment_detail_report'
+    _name = 'report.de_payment_detail_of_bank.payment_transfer_report'
     _description = 'Payment Detail Report'
 
 

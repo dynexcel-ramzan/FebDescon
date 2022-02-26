@@ -3,10 +3,10 @@
         <report 
             id="open_payment_detail_action"
             string="Payment Detail Report"
-            model="report.de_payment_detail_of_bank.payment_detail_report"
+            model="report.de_payment_detail_of_bank.payment_transfer_report"
             report_type="qweb-pdf"
-            file="de_payment_detail_of_bank.payment_detail_report"
-            name="de_payment_detail_of_bank.payment_detail_report"
+            file="de_payment_detail_of_bank.payment_transfer_report"
+            name="de_payment_detail_of_bank.payment_transfer_report"
         />
      
   </data>

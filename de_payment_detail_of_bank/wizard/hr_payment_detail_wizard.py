@@ -8,6 +8,7 @@ class PaymentDetail(models.TransientModel):
 
     date_from = fields.Date(string='Start Date', required=True)
     date_to = fields.Date(string='End Date', required=True)
+    journal_id = fields.Many2one('account.journal', string='Pay Document:', required=True)
    
 
     
