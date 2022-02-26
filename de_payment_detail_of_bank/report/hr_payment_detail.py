@@ -19,13 +19,7 @@ class PayemntDetailReport(models.AbstractModel):
         model = self.env.context.get('active_model')
         docs = self.env['payment.detail.wizard'].browse(self.env.context.get('active_id'))
   
-        
-#         leave_type_obj = self.env['hr.leave.allocation'].search([('employee_id','=',docs.employee_type_iame)])
-        
-        
-        
         return {
             
             'docs': docs,
-#             'leave_type_obj':leave_type_obj
         }
