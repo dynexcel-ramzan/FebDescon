@@ -1,0 +1,104 @@
+<odoo>
+    <template id="payment_transfer_report">
+        <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
+                        <t t-call="de_payment_detail_of_bank.payment_detail_layout"/>
+                     <div class="page">
+                          <div class="row">
+                              <div class="col-2">
+                                   <table>
+                                     <tbody style="color:blue; font-size:10px">
+                                         <tr style="font-weight: bold;">
+                                             <td ></td>
+                                             <td></td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                             </div>
+                             <div class="col-5">
+                                 <table >
+                                     <tbody style="color:blue; font-size:10px"  >
+                                         <tr style="font-weight: bold;">
+                                             <td>Date from:</td>
+                                             <td><span t-field="o.date_from"/></td>
+                                         </tr>
+                                        
+                                     </tbody>
+                                 </table>
+                             </div>
+                               <div class="col-5">
+                                   <table>
+                                     <tbody style="color:blue; font-size:10px">
+                                         <tr style="font-weight: bold;">
+                                             <td >Date to:</td>
+                                             <td><span t-field="o.date_to"/></td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                             </div>
+                        </div>
+                    </div>
+                         <br/>
+                        <div  style="color:blue; font-size:10px">
+                                          <tr>
+                                              <td >Pay Document:</td>
+                                              <t t-foreach="o.journal_id" t-as="jou">
+                                                  <span t-field="jou.name"/>
+                                              </t>
+                                         </tr>
+                        </div>
+                                    
+                             
+                         <div class="page">
+                            <table class="table"  style="border: 1px solid black;">
+                                <tr style="color:blue">
+                                    <th style="border: 1px solid black; font-size:10px" scope="col" width="50">Date</th>
+                                    <th style="border: 1px solid black; font-size:10px" scope="col" width="150">Party Name</th>
+                                    <th style="border: 1px solid black; font-size:10px" scope="col" width="150">Payment Document</th>
+                                    <th style="border: 1px solid black; font-size:10px" scope="col" width="150">Bank Account</th>
+                                    <th style="border: 1px solid black; font-size:10px" scope="col" width="150">Amount</th>
+                               </tr>
+                                <t t-set="total" t-value="0"/>
+                                 <t t-set="count" t-value="0"/>
+                                <t t-foreach="request.env['account.payment'].search([('date', '>=', o.date_from), ('journal_id', '=', o.journal_id.id)])" t-as="emp">
+                                   
+                                    <tr>
+                                        <t t-set="count" t-value="count + 1"/>
+                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.date"/></td>
+                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.partner_id"/></td>
+                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.journal_id"/></td>
+                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="150">
+                                            <t t-foreach="emp.partner_id.bank_ids" t-as="ban">
+                                                  <span t-field="ban.acc_number"/>
+                                              </t>
+                                            </td>
+                                        <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-field="emp.amount"/></td>
+                                    </tr>
+                                    <t t-set="total" t-value="total + emp.amount"/>
+                                </t>
+                                <tr>
+                                    <td style="border-bottom: 1px solid black; font-size:10px" scope="col" width="100"></td>
+                                    <td style="border-bottom: 1px solid black; font-size:10px" scope="col" width="150"></td>
+                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="20"> </td>
+                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="100">Sub Total:&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; <span t-esc="count"/></td>
+                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="100"><span t-esc="total"/></td>
+
+                                </tr>
+                                <tr style="font-size:10px;">
+                                    <td scope="col" width="100"></td>
+                                    <td scope="col" width="100"></td>
+                                    <td style="border: 1px solid black; font-size:10px" scope="col" width="20"> </td>
+                                    <td scope="col" width="100">Grand Total:&#160;&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;  &#160;&#160;&#160;<span t-esc="count"/></td>
+                                    <td scope="col" width="100"><span t-esc="total"/></td>
+
+                                </tr>
+                            </table>
+                             
+                         </div>
+                    </div>
+       </t>
+        </t>
+    
+    </template>
+</odoo>
