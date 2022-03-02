@@ -15,6 +15,7 @@
         'web',
         'web_tour',
         'digest',
+        'de_employee_overtime',
         'base',
     ],
     'description': "",
