@@ -9,32 +9,32 @@
                 <table class="table table-sm table-striped table-bordered">
                     <tr>
                         <th>Date From</th>
-                        <td><t t-esc='docs.date_from.strftime("%b-%y")'/></td>
+                        <td><t t-esc='date_from.strftime("%b-%y")'/></td>
                         <th>Date To</th>
-                        <td><t t-esc='docs.date_to.strftime("%b-%y")'/></td>
+                        <td><t t-esc='date_to.strftime("%b-%y")'/></td>
                     </tr>
                 </table>    
                 <table class="table table-sm table-striped table-bordered">
                    
                     <tr >
                         <th>EMP#</th>
-                        <td><t t-esc='docs.employee_id.emp_number'/></td>
+                        <td><t t-esc='employee.emp_number'/></td>
                         <th>Name</th>
-                        <td><t t-esc='docs.employee_id.name'/></td>
+                        <td><t t-esc='employee.name'/></td>
                         <th>Designation</th>
-                        <td><t t-esc='docs.employee_id.job_id.name'/></td>
+                        <td><t t-esc='employee.job_id.name'/></td>
                         <th>Fiscal Year</th>
-                        <td><t t-esc='docs.date_to.year'/></td>
+                        <td><t t-esc='date_to.year'/></td>
                     </tr>
                     <tr>
                         <th>Department</th>
-                        <td><t t-esc='docs.employee_id.department_id.name'/></td>
+                        <td><t t-esc='employee.department_id.name'/></td>
                         <th>Location</th>
-                        <td><t t-esc='docs.employee_id.work_location_id.name'/></td>
+                        <td><t t-esc='employee.work_location_id.name'/></td>
                         <th>Emp Type</th>
-                        <td><t t-esc='docs.employee_id.emp_type'/></td>
+                        <td><t t-esc='employee.emp_type'/></td>
                         <th>Grade</th>
-                        <td><t t-esc='docs.employee_id.grade_designation.name'/></td>
+                        <td><t t-esc='employee.grade_designation.name'/></td>
                     </tr>
                 </table>          
                 <table class="table table-sm table-striped table-bordered"  style='table-layout:fixed;font-size:10px;'>
@@ -66,7 +66,6 @@
                                        </t>    
                                      </td>
                                   </t>    
-
                             </tr>
                         </t>
                         <tr>
