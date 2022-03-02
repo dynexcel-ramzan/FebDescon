@@ -22,4 +22,12 @@ class hr_salary_rule(models.Model):
     detail_deduction = fields.Boolean(string='Deduction')
     detail_compansation = fields.Boolean(string='Compansation')
 
+    deduction_summary_seq = fields.Integer(string='Deduction Sequence') 
+    deduction_summary_label = fields.Char(string='Deduction Label') 
+    compansation_summary_seq = fields.Integer(string='Compansation Sequence') 
+    compansation_summary_label = fields.Char(string='Compansation Label')
+    detail_reconcile_seq = fields.Integer(string='Sequence')
+    detail_reconcile_label = fields.Char(string='Detail Label')    
+    
+    
     

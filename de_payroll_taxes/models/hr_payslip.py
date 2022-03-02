@@ -8,7 +8,7 @@ class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
     
     employee_number = fields.Char(related='employee_id.emp_number')
-    work_location_id = fields.Many2one('hr.work.location', string='Work Location', compute='_compute_work_location', store=True)  
+    work_location_id = fields.Many2one('hr.work.location', string='Work Location', compute='_compute_work_location')  
     is_salary_Stop = fields.Boolean(string='Stop Salary')
     current_month_tax_amount = fields.Float(string='Tax Amount')
     arrears_amount = fields.Float(string='Arrears Amount')
@@ -19,12 +19,16 @@ class HrPayslip(models.Model):
     tax_year = fields.Char(string='Year')
     next_fiscal_month = fields.Date(string='Next Month')
     net_work_days = fields.Float(string='Net Days', compute='_compute_net_workdays')
-
-    @api.depends('work_location_id')
+    date_of_joining = fields.Date(string='Date of Joining')
+    fiscal_year_date = fields.Date(string='Last Date')
+    
+    @api.depends('work_location_id','employee_id')
     def _compute_work_location(self):
         for slip in self:
             slip.update({
                'work_location_id': slip.employee_id.work_location_id.id,
+               'date_of_joining': slip.employee_id.date,
+               
             })
 
     @api.depends('worked_days_line_ids', 'worked_days_line_ids.number_of_days')
@@ -35,9 +39,12 @@ class HrPayslip(models.Model):
             for workday in slip.worked_days_line_ids:
                 if workday.work_entry_type_id.code == "ABSENT100":
                     absent_days += workday.number_of_days
-            net_days = slip.fiscal_month.days - absent_days  
+            net_days = slip.fiscal_month.days - absent_days
+            if net_days < 0:
+                net_days = 0   
             slip.update({
-                'net_work_days': net_days
+                'net_work_days': net_days,
+                'fiscal_year_date': '2022-06-30' ,
             })
 
     def compute_sheet(self):

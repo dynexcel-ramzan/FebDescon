@@ -20,7 +20,7 @@
                               <field name="remaining_amount" invisible='1'/>
                          </group>
                            <group>
-                               <field name="with_effect" readonly='1'/>
+                               <field name="with_effect" readonly='0'/>
                                <field name="fiscal_month" readonly='1'/>
                                <field name="tax_year" readonly='1'/>
                                <field name="name" force_save='1' readonly='1'/>

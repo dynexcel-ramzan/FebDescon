@@ -10,8 +10,8 @@ class SalaryAdjustmentAllowance(models.Model):
     
     
     name = fields.Char(string='Name')
-    company_id=fields.Many2one('res.company', string='Company', required=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, domain="['|', ('company_id','=', company_id),('company_id','=', False)]")
+    company_id=fields.Many2one('res.company', string='Company')
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     rule_id = fields.Many2one('hr.salary.rule', string='Rule', domain="[('salary_adjustment','=', True)]", required=True)
     date=fields.Date(string='Date', required=True)
     amount= fields.Float(string='Amount')

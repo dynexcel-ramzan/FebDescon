@@ -29,9 +29,16 @@
                             <field name="salary_adjustment" />
                             <h4>Reconciliation Summary Report</h4>  
                               <field name="reconcile_deduction" /> 
-                              <field name="reconcile_compansation" /> 
+                              <field name="deduction_summary_seq" />
+                              <field name="deduction_summary_label" />  
+                              <field name="reconcile_compansation" />
+                              <field name="compansation_summary_seq" /> 
+                              <field name="compansation_summary_label" /> 
                              <h4>Reconciliation Detail Report</h4>  
-                              <field name="reconcilation_details" /> 
+                              <field name="reconcilation_details" />
+                              <field name="detail_reconcile_seq" />
+                              <field name="detail_reconcile_label" />
+                       
                           </group>    
                             
                        </group>     

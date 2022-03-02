@@ -19,26 +19,28 @@ class HrContract(models.Model):
     @api.constrains('is_split_salary')
     def _checkis_split_salary(self):
         for contract in self:
-            basic=self.env['basic.salary.devision'].search([('has_category','=','basic')], limit=1)
-            house_rent= self.env['basic.salary.devision'].search([('has_category','=','rent')], limit=1)
-            utility= self.env['basic.salary.devision'].search([('has_category','=','utility')], limit=1)
-            contract.update({
-                'basic_salary':  round(((contract.wage/100)*(basic.percentage if basic else 0))),
-                'house_rent':  round(((contract.wage/100)*(house_rent.percentage if house_rent else 0))),
-                'utility':  round(((contract.wage/100)*(utility.percentage if utility else 0))),
-            })
+            if  contract.is_split_salary==True:
+                basic=self.env['basic.salary.devision'].search([('has_category','=','basic')], limit=1)
+                house_rent= self.env['basic.salary.devision'].search([('has_category','=','rent')], limit=1)
+                utility= self.env['basic.salary.devision'].search([('has_category','=','utility')], limit=1)
+                contract.update({
+                  'basic_salary':  round(((contract.wage/100)*(basic.percentage if basic else 0))),
+                  'house_rent':  round(((contract.wage/100)*(house_rent.percentage if house_rent else 0))),
+                  'utility':  round(((contract.wage/100)*(utility.percentage if utility else 0))),
+                })
     
     @api.onchange('is_split_salary')
     def onchange_is_split_salary(self):
         for contract in self:
-            basic=self.env['basic.salary.devision'].search([('has_category','=','basic')], limit=1)
-            house_rent= self.env['basic.salary.devision'].search([('has_category','=','rent')], limit=1)
-            utility= self.env['basic.salary.devision'].search([('has_category','=','utility')], limit=1)
-            contract.update({
-                'basic_salary':  round(((contract.wage/100)*(basic.percentage if basic else 0))),
-                'house_rent':  round(((contract.wage/100)*(house_rent.percentage if house_rent else 0))),
-                'utility':  round(((contract.wage/100)*(utility.percentage if utility else 0))),
-            })
+            if  contract.is_split_salary==True:
+                basic=self.env['basic.salary.devision'].search([('has_category','=','basic')], limit=1)
+                house_rent= self.env['basic.salary.devision'].search([('has_category','=','rent')], limit=1)
+                utility= self.env['basic.salary.devision'].search([('has_category','=','utility')], limit=1)
+                contract.update({
+                    'basic_salary':  round(((contract.wage/100)*(basic.percentage if basic else 0))),
+                    'house_rent':  round(((contract.wage/100)*(house_rent.percentage if house_rent else 0))),
+                    'utility':  round(((contract.wage/100)*(utility.percentage if utility else 0))),
+                })
     
     
 
